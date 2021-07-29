@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    div(class="backgroundImage")
+    div(class="loginBox")
+        div(style="text-align:center;font-size:2rem")="登录"
+        div(id="loginMsg" style="color:tomato;opacity:0")="登录失败"
+        div
+            input(placeholder="输入代码")
+        div(style="text-align:center;font-size:2rem")
+            button(onclick="login()")="确定"
+    script(src="/javascripts/login.js")

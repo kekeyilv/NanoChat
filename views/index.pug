@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    div(class="content")
+    div(class="inputBar")
+        input(hidden="hidden" type="file")
+        input(class="msgInput" type="text" placeholder="输入消息")
+        button(class="sendButton" onclick="sendMessage()")="发送"
+        img(id="imgSend" src="/images/picture.svg" alt="发送图片" width=25 height=25 class="sendButton" style="opacity:0.5")
+        img(id="fileSend" src="/images/folder.svg" alt="发送文件" width=28 height=28 class="sendButton" style="opacity:0.5")
+    script(src="/javascripts/index.js")

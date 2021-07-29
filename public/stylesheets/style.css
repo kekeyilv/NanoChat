@@ -1,0 +1,169 @@
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+    text-decoration: none;
+}
+
+nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 5px 20px;
+    font-size: 20px;
+    z-index: 5;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 5px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.content {
+    scroll-behavior: smooth;
+    position: fixed;
+    top: 35px;
+    bottom: 35px;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.inputBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 25px;
+    padding: 5px 20px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 5px;
+    backdrop-filter: blur(10px);
+}
+
+button {
+    transition: background-color 0.2s ease-in;
+    border-radius: 20px;
+    background-color: royalblue;
+    outline: none;
+    border: none;
+    color: white;
+    padding: 3px 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #6788e5;
+}
+
+input {
+    transition: background-color 0.2s ease-in;
+    background-color: #ddd;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+}
+
+input:focus {
+    background-color: #eee;
+}
+
+.msgInput {
+    width: calc(100% - 160px);
+    vertical-align: top;
+}
+
+.sendButton {
+    float: right;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.backgroundImage {
+    position: fixed;
+    top: -20px;
+    bottom: -20px;
+    left: -20px;
+    right: -20px;
+    background-image: url("http://fly.atlinker.cn/api/bing/1920-cn.php");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    filter: blur(20px);
+}
+
+.loginBox {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px 50px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 5px;
+}
+
+.loginBox > div {
+    margin: 20px 0;
+}
+
+.message {
+    padding: 5px 15px;
+    background-color: royalblue;
+    color: white;
+    border-radius: 10px;
+    max-width: calc(100% - 200px);
+    line-break: anywhere;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.hide {
+    transition: all 0.1s ease-in;
+    opacity: 0;
+    cursor: default;
+}
+
+.hide:hover {
+    opacity: 1;
+}
+
+.onlineList {
+    position: fixed;
+    top: 45px;
+    right: 10px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 5px;
+    display: none;
+    overflow: auto;
+    height: 12rem;
+    width: 10rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    outline: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.onlineList:focus {
+    display: block;
+}
+
+.item {
+    transition: background-color 0.2s;
+    padding: 5px 10px;
+    background-color: transparent;
+    cursor: default;
+}
+
+.item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: LightGreen;
+    border-radius: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
