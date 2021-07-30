@@ -156,7 +156,7 @@ router.get("/file", function (req, res) {
         return value["id"] === id[0] && value["name"] === id[1];
     })
     if (item) {
-        res.header("Cache-Control", "max-age=1800");
+        res.header("Cache-Control", "max-age=72000");
         res.download(path.join(dataDir, "files", req.query["url"]), req.query["name"]);
         return;
     }
