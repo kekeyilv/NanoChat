@@ -4,7 +4,7 @@ let status = document.querySelector("#status");
 let onlineList = document.createElement("div");
 let fileInput = document.querySelector("input[type=file]")
 let onlineStatus = document.createElement("span");
-let lastMsgLength = 0
+let lastMsgLength = 0;
 let newMsgStatus = document.createElement("button");
 {
     let onlineStatusButton = document.createElement("button");
@@ -40,7 +40,12 @@ eventSource.addEventListener("message", e => {
     let data = JSON.parse(e.data);
     if (data["type"] === "msg") {
         if (document.hidden && data["content"].length > lastMsgLength && Notification.permission !== "denied") {
-            new Notification("NanoChat有新消息", {tag: "nanoChat"});
+            let notification = new Notification("NanoChat有新消息", {tag: "nanoChat"});
+            notification.addEventListener("click",()=>{
+                window.focus();
+                notification.close();
+                scroll();
+            });
         }
         renderMessage(data["content"]);
 
