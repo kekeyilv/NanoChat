@@ -32,10 +32,19 @@ function scroll() {
     container.scrollTop = container.scrollHeight - container.clientHeight;
 }
 
+Notification.requestPermission().then(status => {
+    if (Notification.permission !== status) Notification.permission = status;
+});
+
 eventSource.addEventListener("message", e => {
     let data = JSON.parse(e.data);
-    if (data["type"] === "msg") renderMessage(data["content"]);
-    else if (data["type"] === "list") renderList(data["content"]);
+    if (data["type"] === "msg") {
+        if (document.hidden && data["content"].length > lastMsgLength && Notification.permission !== "denied") {
+            new Notification("NanoChat有新消息", {tag: "nanoChat"});
+        }
+        renderMessage(data["content"]);
+
+    } else if (data["type"] === "list") renderList(data["content"]);
 })
 
 function undoMessage(id) {
