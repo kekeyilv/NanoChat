@@ -4,6 +4,8 @@ let status = document.querySelector("#status");
 let onlineList = document.createElement("div");
 let fileInput = document.querySelector("input[type=file]")
 let onlineStatus = document.createElement("span");
+let lastMsgLength = 0
+let newMsgStatus = document.createElement("button");
 {
     let onlineStatusButton = document.createElement("button");
     let dot = document.createElement("span");
@@ -20,6 +22,9 @@ let onlineStatus = document.createElement("span");
         onlineList.style.display = "";
     })
     status.append(onlineStatusButton);
+    newMsgStatus.style.display = "none";
+    newMsgStatus.style.marginRight = "15px";
+    status.prepend(newMsgStatus)
 }
 let eventSource = new EventSource("/message");
 
@@ -75,8 +80,7 @@ function renderList(list) {
     });
 }
 
-function renderMessage(messages) {
-    let data = messages;
+function renderMessage(data) {
     let scrollNeeded = (container.scrollTop === container.scrollHeight - container.clientHeight);
     container.innerHTML = "";
     let lastDate = "";
@@ -181,6 +185,13 @@ function renderMessage(messages) {
     }
     container.style.scrollBehavior = "smooth";
     if (scrollNeeded) scroll();
+    else {
+        if (data.length > lastMsgLength) {
+            newMsgStatus.style.display = "inline-block";
+            newMsgStatus.innerText = (data.length - lastMsgLength + (parseInt(newMsgStatus.innerText) || 0)).toString();
+        }
+    }
+    lastMsgLength = data.length;
 }
 
 input.addEventListener("keydown", (e) => {
@@ -228,3 +239,12 @@ document.querySelector("#fileSend").addEventListener("click", () => {
         })
     });
 })
+
+container.addEventListener("scroll", () => {
+    if (container.scrollTop === container.scrollHeight - container.clientHeight) {
+        newMsgStatus.style.display = "none";
+        newMsgStatus.innerText = "";
+    }
+})
+
+newMsgStatus.addEventListener("click", scroll);
