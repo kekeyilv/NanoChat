@@ -9,7 +9,7 @@ let newMsgStatus = document.createElement("button");
 {
     let onlineStatusButton = document.createElement("button");
     let dot = document.createElement("span");
-    onlineList.className = "onlineList";
+    onlineList.className = "popUp onlineList";
     onlineList.tabIndex = 0;
     document.body.append(onlineList);
     dot.className = "dot";
@@ -43,13 +43,17 @@ window.addEventListener("load", () =>
 eventSource.addEventListener("message", e => {
     let data = JSON.parse(e.data);
     if (data["type"] === "msg") {
-        if (document.hidden && data["content"].length > lastMsgLength && Notification.permission !== "denied") {
-            let notification = new Notification("NanoChat有新消息", {tag: "nanoChat"});
-            notification.addEventListener("click", () => {
-                window.focus();
-                notification.close();
-                scroll();
-            });
+        try {
+            if (document.hidden && data["content"].length > lastMsgLength && Notification.permission === "granted") {
+                let notification = new Notification("NanoChat有新消息", {tag: "nanoChat"});
+                notification.addEventListener("click", () => {
+                    window.focus();
+                    notification.close();
+                    scroll();
+                });
+            }
+        } catch (error) {
+            console.error(error);
         }
         renderMessage(data["content"]);
 
@@ -65,12 +69,15 @@ function undoMessage(id) {
     })
 }
 
-function sendMessage() {
+function sendMessage(reply = null) {
     if (input.value) {
         if (!input.value.trim()) return;
         let request = new XMLHttpRequest();
         request.open("POST", "/message", true);
-        request.send(JSON.stringify({content: input.value, type: "text"}));
+        request.send(JSON.stringify({
+            content: (reply != null ? reply + "#" : "") + input.value,
+            type: reply != null ? "reply" : "text"
+        }));
         request.addEventListener("readystatechange", () => {
             if (request.status === 403) {
                 window.location.href = "/login";
@@ -116,6 +123,7 @@ function renderMessage(data) {
             dateLine.innerText = lastDate;
         }
         let line = document.createElement("div");
+        line.setAttribute("msgID", i.toString());
         if (data[i]["type"] === "undo") {
             line.style.textAlign = "center";
             let tip = document.createElement("span");
@@ -125,12 +133,30 @@ function renderMessage(data) {
         } else {
             let text = document.createElement("span");
             let info = document.createElement("span");
-            let hide = document.createElement("span");
-            let ip = document.createElement("span");
             line.innerText = data[i]["sender"] + ": ";
             text.className = "message";
             if (data[i]["type"] === "text") text.innerText = data[i]["content"];
-            else if (data[i]["type"] === "image") {
+            else if (data[i]["type"] === "reply") {
+                let replyBox = document.createElement("div");
+                let replyFrom = data[i]["content"].split("#")[0];
+                replyBox.style.backgroundColor = "#2f4eac";
+                replyBox.innerText = "回复自" + data[parseInt(replyFrom)]["sender"] + "的消息";
+                replyBox.style.borderRadius = "10px";
+                replyBox.style.padding = "10px 15px";
+                replyBox.style.margin = "5px -5px";
+                replyBox.style.cursor = "pointer";
+                replyBox.addEventListener("click", () => {
+                    let replyLine = document.querySelector("div[msgID='" + parseInt(replyFrom) + "']");
+                    replyLine.scrollIntoView();
+                    replyLine.style.transition = "background 0.2s ease-in";
+                    replyLine.style.backgroundColor = "#ccc";
+                    setTimeout(() => replyLine.style.backgroundColor = "", 1000);
+                })
+                let replyContent = document.createElement("div");
+                replyContent.innerText = data[i]["content"].slice(replyFrom.length + 1);
+                text.append(replyBox);
+                text.append(replyContent);
+            } else if (data[i]["type"] === "image") {
                 let img = document.createElement("img");
                 text.append(img);
                 text.style.padding = "10px";
@@ -187,17 +213,40 @@ function renderMessage(data) {
             info.innerText = new Date(data[i]["time"]).toTimeString().match(/\d+:\d+/)[0];
             info.style.color = "#888";
             line.append(info);
-            hide.className = "hide";
-            ip.innerText = " IP:" + data[i]["address"];
-            hide.append(ip);
-            let undo = document.createElement("button");
-            undo.innerText = "撤回";
-            undo.style.marginLeft = "10px";
-            undo.addEventListener("click", () => {
-                undoMessage(i);
+            text.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+                let popUp = document.createElement("div");
+                popUp.tabIndex = 0;
+                popUp.className = "popUp";
+                let ip = document.createElement("div");
+                ip.innerText = " IP:" + data[i]["address"];
+                ip.style.padding = "5px 15px";
+                ip.style.color = "#888";
+                popUp.append(ip);
+                let undo = document.createElement("div");
+                undo.className = "item";
+                undo.innerText = "撤回";
+                undo.addEventListener("click", () => {
+                    undoMessage(i);
+                });
+                popUp.style.left = e.clientX + "px";
+                popUp.style.top = e.clientY - container.offsetTop + container.scrollTop + "px";
+                popUp.append(undo);
+                let reply = document.createElement("div");
+                reply.className = "item";
+                reply.innerText = "回复";
+                reply.addEventListener("click", () => {
+                    sendMessage(i);
+                })
+                popUp.append(reply);
+                line.append(popUp);
+                popUp.style.display = "block";
+                popUp.focus();
+                popUp.style.display = "";
+                popUp.addEventListener("blur", () => {
+                    popUp.remove();
+                })
             })
-            hide.append(undo);
-            line.append(hide);
         }
         container.append(line);
     }

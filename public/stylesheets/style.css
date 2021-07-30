@@ -129,23 +129,26 @@ input:focus {
     opacity: 1;
 }
 
-.onlineList {
-    position: fixed;
-    top: 45px;
-    right: 10px;
+.popUp {
+    position: absolute;
     box-shadow: rgba(0, 0, 0, 0.5) 0 0 5px;
     display: none;
     overflow: auto;
-    height: 12rem;
-    width: 10rem;
     background-color: rgba(255, 255, 255, 0.1);
     outline: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
 
-.onlineList:focus {
+.popUp:focus {
     display: block;
+}
+
+.onlineList{
+    top: 45px;
+    right: 10px;
+    height: 12rem;
+    width: 10rem;
 }
 
 .item {

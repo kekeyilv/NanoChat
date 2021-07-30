@@ -109,7 +109,7 @@ router.post('/', bodyParser.text(), function (req, res, next) {
         })
         if (item) {
             let content = JSON.parse(req.body);
-            if (content["type"] === "text" || content["type"] === "image" || content["type"] === "file") {
+            if (content["type"] === "text" || content["type"] === "image" || content["type"] === "file" || content["type"] === "reply") {
                 messages[item["class"]].push({
                     sender: item["name"],
                     content: content["content"],
